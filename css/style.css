@@ -48,27 +48,118 @@
   --transition-slow: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-theme="light"] {
+[data-theme="light"],
+html[data-theme="light"],
+body.light-theme {
   --bg-main: #f8fafc;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #f1f5f9;
-  --bg-surface-glass: rgba(255, 255, 255, 0.85);
+  --bg-surface-glass: rgba(255, 255, 255, 0.92);
   --bg-surface-hover: #e2e8f0;
 
-  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.09);
   --border-focus: rgba(99, 102, 241, 0.6);
-  --border-glow: rgba(99, 102, 241, 0.2);
+  --border-glow: rgba(99, 102, 241, 0.15);
 
   --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --text-inverse: #f8fafc;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
 
-  --primary-light: rgba(99, 102, 241, 0.1);
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.12);
-  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.2);
+  --primary-light: rgba(99, 102, 241, 0.12);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.1);
+  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.15);
+}
+
+html[data-theme="light"] body,
+body.light-theme {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .header,
+body.light-theme .header {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .course-card,
+body.light-theme .course-card,
+html[data-theme="light"] .feature-card,
+body.light-theme .feature-card,
+html[data-theme="light"] .testimonial-card,
+body.light-theme .testimonial-card,
+html[data-theme="light"] .cart-drawer,
+body.light-theme .cart-drawer,
+html[data-theme="light"] .modal-content,
+body.light-theme .modal-content {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.09) !important;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06) !important;
+}
+
+html[data-theme="light"] .hero-title,
+body.light-theme .hero-title,
+html[data-theme="light"] .section-title h2,
+body.light-theme .section-title h2,
+html[data-theme="light"] .card-title,
+body.light-theme .card-title,
+html[data-theme="light"] .current-price,
+body.light-theme .current-price,
+html[data-theme="light"] .cart-header-title h3,
+body.light-theme .cart-header-title h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .card-media,
+body.light-theme .card-media {
+  background: #e2e8f0 !important;
+}
+
+html[data-theme="light"] .search-box,
+body.light-theme .search-box {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+html[data-theme="light"] .search-box input,
+body.light-theme .search-box input {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .icon-btn,
+body.light-theme .icon-btn {
+  background: #f1f5f9 !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .filter-btn,
+body.light-theme .filter-btn {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .filter-btn.active,
+body.light-theme .filter-btn.active {
+  background: var(--gradient-primary) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+html[data-theme="light"] .footer,
+body.light-theme .footer {
+  background: #f1f5f9 !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .ambient-glow,
+body.light-theme .ambient-glow {
+  opacity: 0.07 !important;
 }
 
 /* Reset & Base */
@@ -551,6 +642,10 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

@@ -119,7 +119,7 @@
       return `
         <article class="course-card" data-id="${course.id}">
           <div class="card-media">
-            <img src="${course.imagen}" alt="${escapeHTML(course.titulo)}" loading="lazy">
+            <img src="${course.imagen}" alt="${escapeHTML(course.titulo)}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=85';">
             <span class="badge-tag ${badgeClass}">${course.badge || 'Curso'}</span>
             <button class="card-quick-view" data-quick-id="${course.id}">Vista rápida</button>
           </div>
@@ -381,7 +381,7 @@
     modalBody.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 1.5rem;">
         <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 16/9;">
-          <img src="${course.imagen}" alt="${escapeHTML(course.titulo)}" style="width: 100%; height: 100%; object-fit: cover;">
+          <img src="${course.imagen}" alt="${escapeHTML(course.titulo)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=85';">
           <span class="badge-tag bestseller" style="position: absolute; top: 12px; left: 12px;">${course.badge || 'Destacado'}</span>
         </div>
         <div>
@@ -536,48 +536,67 @@
   // ==========================================================================
   // Modo Oscuro / Claro
   // ==========================================================================
+  let isTogglingTheme = false;
+
   function initTheme() {
     const savedTheme = localStorage.getItem("novalearn_theme") || "dark";
     document.documentElement.setAttribute("data-theme", savedTheme);
+    if (document.body) {
+      document.body.classList.toggle("light-theme", savedTheme === "light");
+    }
     updateThemeIcon(savedTheme);
   }
 
   function toggleTheme() {
+    if (isTogglingTheme) return;
+    isTogglingTheme = true;
+    setTimeout(() => { isTogglingTheme = false; }, 350);
+
     const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
+    
     document.documentElement.setAttribute("data-theme", newTheme);
+    if (document.body) {
+      document.body.classList.toggle("light-theme", newTheme === "light");
+    }
+
     try {
       localStorage.setItem("novalearn_theme", newTheme);
     } catch(e) {}
+
     updateThemeIcon(newTheme);
     showToast("Tema actualizado", `Modo ${newTheme === 'dark' ? 'Oscuro' : 'Claro'} activado`, "info");
   }
 
   function updateThemeIcon(theme) {
     if (!themeToggleBtn) return;
-    if (theme === "light") {
-      themeToggleBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      `;
-      themeToggleBtn.title = "Cambiar a Modo Oscuro";
-    } else {
-      themeToggleBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-      `;
-      themeToggleBtn.title = "Cambiar a Modo Claro";
-    }
+    themeToggleBtn.style.transform = "scale(0.85) rotate(180deg)";
+    setTimeout(() => {
+      if (theme === "light") {
+        themeToggleBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        `;
+        themeToggleBtn.title = "Cambiar a Modo Oscuro";
+      } else {
+        themeToggleBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        `;
+        themeToggleBtn.title = "Cambiar a Modo Claro";
+      }
+      themeToggleBtn.style.transform = "scale(1) rotate(0deg)";
+    }, 150);
   }
 
   // ==========================================================================
