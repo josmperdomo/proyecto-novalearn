@@ -1,269 +1,489 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Carrito</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/skeleton.css">
-    <link rel="stylesheet" href="css/custom.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>NovaLearn | Cursos Online de Alta Calidad</title>
+  <meta name="description" content="NovaLearn - Domina desarrollo web, inteligencia artificial, diseño UX, negocios y creatividad con cursos interactivos impartidos por profesionales de la industria.">
+  <meta name="theme-color" content="#6366f1">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos Modernos -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header id="header" class="header">
+
+  <!-- Luces ambientales de fondo -->
+  <div class="ambient-glow glow-top-left" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom-right" aria-hidden="true"></div>
+
+  <!-- Header y Navegación Sticky -->
+  <header id="header" class="header">
+    <div class="container nav-container">
+      <a href="#hero" class="logo" id="brand-logo" aria-label="NovaLearn Inicio">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div class="logo-text">Nova<span>Learn</span></div>
+      </a>
+
+      <nav aria-label="Navegación principal">
+        <ul class="nav-links">
+          <li><a href="#catalogo" class="nav-link">Cursos</a></li>
+          <li><a href="#beneficios" class="nav-link">Beneficios</a></li>
+          <li><a href="#testimonios" class="nav-link">Testimonios</a></li>
+          <li><a href="#faq" class="nav-link">Preguntas</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Selector de Tema (Modo Oscuro / Modo Claro) -->
+        <button id="theme-toggle-btn" class="icon-btn" aria-label="Alternar modo de color" title="Alternar Modo Oscuro/Claro">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- Botón de Carrito con Contador Bouncy -->
+        <button id="open-cart-btn" class="icon-btn" aria-label="Abrir carrito de compras" title="Ver Carrito">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span id="cart-badge" class="cart-badge" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+      <div class="container">
+        <div class="hero-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+          <span>Temporada 2026 • Todos los cursos con hasta 90% OFF</span>
+        </div>
+
+        <h1 class="hero-title">
+          Aprende las habilidades que definen tu <br>
+          <span class="gradient-text">futuro profesional</span>
+        </h1>
+
+        <p class="hero-description">
+          Acelera tu crecimiento con cursos prácticos, proyectos del mundo real y soporte de instructores expertos. Estudia a tu propio ritmo con acceso ilimitado de por vida.
+        </p>
+
+        <!-- Buscador Inteligente -->
+        <div class="search-wrapper">
+          <form id="busqueda" class="search-box" role="search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted); margin-right: 0.5rem;">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="buscador" placeholder="¿Qué curso o habilidad te gustaría dominar hoy?..." autocomplete="off">
+            <button type="submit" class="search-submit-btn" id="submit-buscador">
+              Buscar
+            </button>
+          </form>
+        </div>
+
+        <!-- Estadísticas Clave -->
+        <div class="stats-strip">
+          <div class="stat-item">
+            <span class="stat-num">+45,000</span>
+            <span class="stat-label">Alumnos Graduados</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">98.4%</span>
+            <span class="stat-label">Tasa de Satisfacción</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">4.9 / 5</span>
+            <span class="stat-label">Calificación Promedio</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Acceso de por Vida</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beneficios / Value Props -->
+    <section id="beneficios" class="features-section">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h4>Acceso de por vida</h4>
+              <p>Repasa las clases cuando quieras, desde tu laptop, tablet o móvil sin fechas de caducidad.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h4>Certificado Oficial</h4>
+              <p>Valida tus nuevas habilidades con diplomas verificables listos para adjuntar a tu perfil de LinkedIn.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h4>Proyectos Prácticos</h4>
+              <p>Aprende haciendo con código real, plantillas descargables y proyectos aplicables al mundo laboral.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h4>Comunidad y Mentoría</h4>
+              <p>Interactúa con instructores y compañeros en foros exclusivos para resolver cualquier duda.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catálogo de Cursos -->
+    <section id="catalogo" class="catalog-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-title">
+            <h2>Explora Nuestros Cursos</h2>
+            <p>Contenido actualizado mensualmente con las tecnologías más demandadas del mercado.</p>
+          </div>
+
+          <!-- Filtros de Categoría -->
+          <div class="filter-pills" id="filter-pills" role="tablist">
+            <button class="filter-btn active" data-category="todos" role="tab">Todos</button>
+            <button class="filter-btn" data-category="desarrollo" role="tab">Desarrollo & IA</button>
+            <button class="filter-btn" data-category="diseno" role="tab">Diseño & UX</button>
+            <button class="filter-btn" data-category="musica" role="tab">Música & Audio</button>
+            <button class="filter-btn" data-category="negocios" role="tab">Negocios & Finanzas</button>
+            <button class="filter-btn" data-category="estilo-vida" role="tab">Estilo de Vida</button>
+          </div>
+        </div>
+
+        <!-- Grid de Cursos Dinámico -->
+        <div id="courses-grid" class="courses-grid">
+          <!-- Se inyecta dinámicamente mediante app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonios de Estudiantes -->
+    <section id="testimonios" class="testimonials-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <h2 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -0.8px;">Lo que dicen nuestros estudiantes</h2>
+          <p style="color: var(--text-secondary); margin-top: 0.5rem;">Historias reales de personas que transformaron su futuro con NovaLearn.</p>
+        </div>
+
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-quote">"El curso de JavaScript y React superó por completo mis expectativas. Los proyectos son reales y gracias a ellos conseguí mi primer trabajo como Frontend Developer en solo 4 meses."</p>
+            <div class="student-info">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Lucía Gómez" class="student-avatar">
+              <div>
+                <div class="student-name">Lucía Gómez</div>
+                <div class="student-role">Frontend Developer en TechCorp</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-quote">"La calidad visual, la didáctica de los profesores y los recursos adicionales son de otro nivel. Poder aumentar las cantidades o elegir cursos de varias ramas en el carrito es súper cómodo."</p>
+            <div class="student-info">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Andrés Silva" class="student-avatar">
+              <div>
+                <div class="student-name">Andrés Silva</div>
+                <div class="student-role">Product Designer & Freelancer</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-quote">"El curso de Inteligencia Artificial con Python tiene un balance perfecto entre teoría matemática y aplicación directa. Totalmente recomendado para cualquier profesional."</p>
+            <div class="student-info">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Mariana Rivas" class="student-avatar">
+              <div>
+                <div class="student-name">Mariana Rivas</div>
+                <div class="student-role">Data Scientist & Investigadora</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banner Call to Action -->
+    <section class="container" style="padding: 3rem 1.5rem 5rem;">
+      <div style="background: var(--gradient-primary); border-radius: var(--radius-lg); padding: 3.5rem 2rem; text-align: center; color: #fff; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;">
+        <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 1rem;">¿Listo para impulsar tus habilidades hoy?</h2>
+        <p style="font-size: 1.1rem; opacity: 0.92; max-width: 550px; margin: 0 auto 2rem;">Aprovecha la promoción de bienvenida y obtén un 20% de descuento adicional usando el cupón <strong>NOVA20</strong> en el carrito.</p>
+        <a href="#catalogo" class="search-submit-btn" style="background: #fff; color: var(--primary); display: inline-flex; font-weight: 800; font-size: 1rem; padding: 0.9rem 2.2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+          Ver todos los cursos
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Moderno -->
+  <footer id="faq" class="footer">
     <div class="container">
-        <div class="row">
-            <div class="four columns">
-                <img src="img/logo.jpg" id="logo">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo">
+            <div class="logo-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
             </div>
-            <div class="two columns u-pull-right">
-                <ul>
-                    <li class="submenu">
-                            <img src="img/cart.png" id="img-carrito">
-                            <div id="carrito">
-                                    
-                                    <table id="lista-carrito" class="u-full-width">
-                                        <thead>
-                                            <tr>
-                                                <th>Imagen</th>
-                                                <th>Nombre</th>
-                                                <th>Precio</th>
-                                                <th>Cantidad</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-
-                                    <a href="#" id="vaciar-carrito" class="button u-full-width">Vaciar Carrito</a>
-                            </div>
-                    </li>
-                </ul>
-            </div>
-        </div> 
-    </div>
-    </header>
-
-
-    <div id="hero">
-        <div class="container">
-            <div class="row">
-                    <div class="six columns">
-                        <div class="contenido-hero">
-                                <h2>Aprende algo nuevo</h2>
-                                <p>Todos los cursos a $15</p>
-                                <form action="#" id="busqueda" method="post" class="formulario">
-                                    <input class="u-full-width" type="text" placeholder="¿Que te gustaría Aprender?" id="buscador">
-                                    <input type="submit" id="submit-buscador" class="submit-buscador">
-                                </form>
-                        </div>
-                    </div>
-            </div> 
+            <div class="logo-text">Nova<span>Learn</span></div>
+          </div>
+          <p>La plataforma educativa creada para potenciar a la próxima generación de creadores, desarrolladores y líderes del mundo hispanohablante.</p>
+          <div class="footer-socials">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">© 2026 NovaLearn Inc. Todos los derechos reservados.</span>
+          </div>
         </div>
-    </div>
 
-    <div class="barra">
-        <div class="container">
-            <div class="row">
-                    <div class="four columns icono icono1">
-                        <p>20,000 Cursos en línea <br>
-                        Explora  los temas más recientes</p>
-                    </div>
-                    <div class="four columns icono icono2">
-                        <p>Instructores Expertos <br>
-                        Aprende con distintos estilos</p>
-                    </div>
-                    <div class="four columns icono icono3">
-                        <p>Acceso de por vida <br>
-                        Aprende a tu ritmo</p>
-                    </div>
-            </div>
-        </div> 
-
-    </div>
-
-    <div id="lista-cursos" class="container">
-        <h1 id="encabezado" class="encabezado">Cursos En Línea</h1>
-        <div class="row">
-            <div class="four columns">
-                <div class="card">                   
-                    <div class="info-card">
-                        <img src="img/curso1.jpg" class="imagen-curso u-full-width">
-                        <h4>HTML5, CSS3, JavaScript para Principiantes</h4>
-                        <p>Juan Pedro</p>
-                        <img src="img/estrellas.png">
-                        <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="1">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-            </div>
-            <div class="four columns">
-                    <div class="card">                       
-                        <div class="info-card">
-                            <img src="img/curso2.jpg" class="imagen-curso u-full-width">
-                            <h4>Curso de Comida Vegetariana</h4>
-                            <p>Juan Pedro</p>
-                            <img src="img/estrellas.png">
-                            <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="2">Agregar Al Carrito</a>
-                        </div>
-                    </div>
-            </div>
-            <div class="four columns">
-                    <div class="card">                        
-                        <div class="info-card">
-                            <img src="img/curso3.jpg" class="imagen-curso u-full-width">
-                            <h4>Guitarra para Principiantes</h4>
-                            <p>Juan Pedro</p>
-                            <img src="img/estrellas.png">
-                            <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="3">Agregar Al Carrito</a>
-                        </div>
-                    </div> <!--.card-->
-            </div>
-
-        </div> <!--.row-->
-        <div class="row">
-            <div class="four columns">
-                <div class="card">                    
-                    <div class="info-card">
-                        <img src="img/curso4.jpg" class="imagen-curso u-full-width">
-                        <h4>Huerto en tu casa</h4>
-                        <p>Juan Pedro</p>
-                        <img src="img/estrellas.png">
-                        <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="4">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-            </div>
-            <div class="four columns">
-                    <div class="card">                        
-                        <div class="info-card">
-                            <img src="img/curso5.jpg" class="imagen-curso u-full-width">
-                            <h4>Decoración con productos de tu hogar</h4>
-                            <p>Juan Pedro</p>
-                            <img src="img/estrellas.png">
-                            <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="5">Agregar Al Carrito</a>
-                        </div>
-                    </div> <!--.card-->
-            </div>
-            <div class="four columns">
-                    <div class="card">                        
-                        <div class="info-card">
-                            <img src="img/curso1.jpg" class="imagen-curso u-full-width">
-                            <h4>Diseño Web para Principiantes</h4>
-                            <p>Juan Pedro</p>
-                            <img src="img/estrellas.png">
-                            <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="6">Agregar Al Carrito</a>
-                        </div>
-                    </div> <!--.card-->
-            </div>
-        </div> <!--.row-->
-        <div class="row">
-            <div class="four columns">
-                <div class="card">                    
-                    <div class="info-card">
-                        <img src="img/curso2.jpg" class="imagen-curso u-full-width">
-                        <h4>Comida Mexicana para principiantes</h4>
-                        <p>Juan Pedro</p>
-                        <img src="img/estrellas.png">
-                        <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="7">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-            </div>
-            <div class="four columns">
-                    <div class="card">                      
-                        <div class="info-card">
-                            <img src="img/curso3.jpg" class="imagen-curso u-full-width">
-                            <h4>Estudio Musical en tu casa</h4>
-                            <p>Juan Pedro</p>
-                            <img src="img/estrellas.png">
-                            <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="8">Agregar Al Carrito</a>
-                        </div>
-                    </div> <!--.card-->
-            </div>
-            <div class="four columns">
-                    <div class="card">                       
-                        <div class="info-card">
-                            <img src="img/curso4.jpg" class="imagen-curso u-full-width">
-                            <h4>Cosecha tus propias frutas y verduras</h4>
-                            <p>Juan Pedro</p>
-                            <img src="img/estrellas.png">
-                            <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="9">Agregar Al Carrito</a>
-                        </div>
-                    </div> <!--.card-->
-            </div>
-        </div> <!--.row-->
-        <div class="row">
-                <div class="four columns">
-                    <div class="card">                        
-                        <div class="info-card">
-                            <img src="img/curso5.jpg" class="imagen-curso u-full-width">
-                            <h4>Prepara galletas caseras</h4>
-                            <p>Juan Pedro</p>
-                            <img src="img/estrellas.png">
-                            <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="10">Agregar Al Carrito</a>
-                        </div>
-                    </div> <!--.card-->
-                </div>
-                <div class="four columns">
-                        <div class="card">                           
-                            <div class="info-card">
-                                <img src="img/curso1.jpg" class="imagen-curso u-full-width">
-                                <h4>JavaScript Moderno con ES6</h4>
-                                <p>Juan Pedro</p>
-                                <img src="img/estrellas.png">
-                                <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                                <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="11">Agregar Al Carrito</a>
-                            </div>
-                        </div> <!--.card-->
-                </div>
-                <div class="four columns">
-                        <div class="card">                           
-                            <div class="info-card">
-                                <img src="img/curso2.jpg" class="imagen-curso u-full-width">
-                                <h4>100 Recetas de Comida Natural</h4>
-                                <p>Juan Pedro</p>
-                                <img src="img/estrellas.png">
-                                <p class="precio">$200  <span class="u-pull-right ">$15</span></p>
-                                <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="12">Agregar Al Carrito</a>
-                            </div>
-                        </div> <!--.card-->
-                </div>
-            </div> <!--.row-->
-    </div>  
-
-    <footer id="footer" class="footer">
-        <div class="container">
-            <div class="row">
-                    <div class="four columns">
-                            <nav id="principal" class="menu">
-                                <a class="enlace" href="#">Para tu Negocio</a>
-                                <a class="enlace" href="#">Conviertete en Instructor</a>
-                                <a class="enlace" href="#">Aplicaciones Móviles</a>
-                                <a class="enlace" href="#">Soporte</a>
-                                <a class="enlace" href="#">Temas</a>
-                            </nav>
-                    </div>
-                    <div class="four columns">
-                            <nav id="secundaria" class="menu">
-                                <a class="enlace" href="#">¿Quienes Somos?</a>
-                                <a class="enlace" href="#">Empleo</a>
-                                <a class="enlace" href="#">Blog</a>
-                            </nav>
-                    </div>
-            </div>
+        <div class="footer-column">
+          <h4>Explorar</h4>
+          <ul class="footer-links">
+            <li><a href="#catalogo">Cursos Frontend</a></li>
+            <li><a href="#catalogo">Inteligencia Artificial</a></li>
+            <li><a href="#catalogo">Diseño UI/UX</a></li>
+            <li><a href="#catalogo">Producción Musical</a></li>
+          </ul>
         </div>
-        <div class="fter"><p>Todos los derechos reservados &copy; 2023 Universidad, Creado por <a href="https://github.com/josperdev" class="fter" target="_blank"><span class="name">José Perdomo</span></a></p></div>
-    </footer>
 
-    <script src="js/app.js"></script>
+        <div class="footer-column">
+          <h4>Plataforma</h4>
+          <ul class="footer-links">
+            <li><a href="#beneficios">Cómo Funciona</a></li>
+            <li><a href="#testimonios">Opiniones de Alumnos</a></li>
+            <li><a href="#catalogo">Cupones y Ofertas</a></li>
+            <li><a href="#">Garantía de Satisfacción</a></li>
+          </ul>
+        </div>
 
+        <div class="footer-column">
+          <h4>Soporte</h4>
+          <ul class="footer-links">
+            <li><a href="#">Centro de Ayuda</a></li>
+            <li><a href="#">Términos y Condiciones</a></li>
+            <li><a href="#">Política de Privacidad</a></li>
+            <li><a href="#">Contacto con Instructores</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>NovaLearn • Proyecto Educativo Modernizado</div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="#" style="color: var(--text-muted);">Privacidad</a>
+          <a href="#" style="color: var(--text-muted);">Términos</a>
+          <a href="#" style="color: var(--text-muted);">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       Panel Desplegable del Carrito (Slide-Over Drawer)
+       ========================================================================== -->
+  <div id="cart-backdrop" class="cart-backdrop" aria-hidden="true">
+    <aside id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div class="cart-header">
+        <div class="cart-header-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <h3 id="cart-title">Tu Carrito</h3>
+          <span id="cart-items-count-header" class="cart-items-count-badge">0 cursos</span>
+        </div>
+        <button id="close-cart-btn" class="btn-close-cart" aria-label="Cerrar carrito">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="cart-body">
+        <!-- Vista de Carrito Vacío -->
+        <div id="cart-empty" class="cart-empty">
+          <div class="cart-empty-icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+          </div>
+          <h4>Tu carrito está vacío</h4>
+          <p style="font-size: 0.9rem;">Explora nuestros cursos y encuentra la habilidad perfecta para comenzar a aprender hoy.</p>
+        </div>
+
+        <!-- Lista de Cursos en el Carrito -->
+        <div id="cart-items" style="display: none; flex-direction: column; gap: 0.85rem;">
+          <!-- Generado dinámicamente con JavaScript -->
+        </div>
+      </div>
+
+      <!-- Footer del Carrito con Totales y Checkout -->
+      <div id="cart-footer" class="cart-footer" style="display: none;">
+        <!-- Cupones de descuento -->
+        <div class="coupon-row">
+          <input type="text" id="coupon-input" class="coupon-input" placeholder="Cupón (ej: NOVA20)">
+          <button id="apply-coupon-btn" class="coupon-btn">Aplicar</button>
+        </div>
+
+        <div class="cart-totals">
+          <div class="total-line">
+            <span>Subtotal</span>
+            <span id="cart-subtotal">$0.00</span>
+          </div>
+          <div id="discount-row" class="total-line" style="display: none;">
+            <span>Descuento Promocional</span>
+            <span id="discount-amount" class="discount-tag">-$0.00</span>
+          </div>
+          <div class="total-line">
+            <span>Garantía y soporte</span>
+            <span style="color: var(--accent-emerald);">Incluido</span>
+          </div>
+          <div class="total-line final">
+            <span>Total</span>
+            <span id="cart-total" style="color: var(--primary);">$0.00</span>
+          </div>
+        </div>
+
+        <div class="cart-action-buttons">
+          <button id="checkout-btn" class="btn-checkout">Finalizar Compra Segura</button>
+          <button id="clear-cart-btn" class="btn-clear-cart">Vaciar Carrito</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Modal de Vista Rápida del Curso -->
+  <div id="quick-view-modal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="modal-close-btn" aria-label="Cerrar modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="modal-body-content" style="padding: 1.75rem;">
+        <!-- Contenido generado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Checkout / Pago Simulado -->
+  <div id="checkout-modal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-content" style="max-width: 520px;">
+      <button class="modal-close-btn" aria-label="Cerrar modal de pago">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div style="padding: 2rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+          </div>
+          <h3 style="font-size: 1.4rem; font-weight: 800;">Checkout Seguro</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">Completa tus datos para obtener acceso inmediato a tus cursos.</p>
+        </div>
+
+        <div id="checkout-order-summary">
+          <!-- Resumen inyectado con JS -->
+        </div>
+
+        <form id="checkout-form" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;">Nombre Completo</label>
+            <input type="text" required class="coupon-input" style="width: 100%;" placeholder="Ej. Juan Pérez" value="José Perdomo">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;">Correo Electrónico (Para recibir accesos)</label>
+            <input type="email" required class="coupon-input" style="width: 100%; text-transform: none;" placeholder="tucorreo@ejemplo.com" value="jose@ejemplo.com">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;">Número de Tarjeta Simulado</label>
+            <input type="text" required class="coupon-input" style="width: 100%;" placeholder="•••• •••• •••• 4242" value="4532 8901 2345 4242">
+          </div>
+          <button type="submit" id="confirm-payment-btn" class="btn-checkout" style="margin-top: 0.5rem; width: 100%;">
+            Confirmar y Pagar Ahora
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor de Toasts Flotantes -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/courses-data.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
