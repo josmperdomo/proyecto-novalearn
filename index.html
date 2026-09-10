@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Estilos Modernos -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2.2.0">
 </head>
 <body>
 
@@ -47,7 +47,7 @@
 
       <div class="nav-actions">
         <!-- Selector de Tema (Modo Oscuro / Modo Claro) -->
-        <button id="theme-toggle-btn" class="icon-btn" aria-label="Alternar modo de color" title="Alternar Modo Oscuro/Claro">
+        <button id="theme-toggle-btn" class="icon-btn" aria-label="Alternar modo de color" title="Alternar Modo Oscuro/Claro" onclick="window.NovaLearn && window.NovaLearn.toggleTheme()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -62,7 +62,7 @@
         </button>
 
         <!-- Botón de Carrito con Contador Bouncy -->
-        <button id="open-cart-btn" class="icon-btn" aria-label="Abrir carrito de compras" title="Ver Carrito">
+        <button id="open-cart-btn" class="icon-btn" aria-label="Abrir carrito de compras" title="Ver Carrito" onclick="window.NovaLearn && window.NovaLearn.openCart()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
@@ -201,12 +201,12 @@
 
           <!-- Filtros de Categoría -->
           <div class="filter-pills" id="filter-pills" role="tablist">
-            <button class="filter-btn active" data-category="todos" role="tab">Todos</button>
-            <button class="filter-btn" data-category="desarrollo" role="tab">Desarrollo & IA</button>
-            <button class="filter-btn" data-category="diseno" role="tab">Diseño & UX</button>
-            <button class="filter-btn" data-category="musica" role="tab">Música & Audio</button>
-            <button class="filter-btn" data-category="negocios" role="tab">Negocios & Finanzas</button>
-            <button class="filter-btn" data-category="estilo-vida" role="tab">Estilo de Vida</button>
+            <button class="filter-btn active" data-category="todos" role="tab" onclick="window.NovaLearn && window.NovaLearn.filterByCategory('todos', this)">Todos</button>
+            <button class="filter-btn" data-category="desarrollo" role="tab" onclick="window.NovaLearn && window.NovaLearn.filterByCategory('desarrollo', this)">Desarrollo & IA</button>
+            <button class="filter-btn" data-category="diseno" role="tab" onclick="window.NovaLearn && window.NovaLearn.filterByCategory('diseno', this)">Diseño & UX</button>
+            <button class="filter-btn" data-category="musica" role="tab" onclick="window.NovaLearn && window.NovaLearn.filterByCategory('musica', this)">Música & Audio</button>
+            <button class="filter-btn" data-category="negocios" role="tab" onclick="window.NovaLearn && window.NovaLearn.filterByCategory('negocios', this)">Negocios & Finanzas</button>
+            <button class="filter-btn" data-category="estilo-vida" role="tab" onclick="window.NovaLearn && window.NovaLearn.filterByCategory('estilo-vida', this)">Estilo de Vida</button>
           </div>
         </div>
 
@@ -355,7 +355,7 @@
           <h3 id="cart-title">Tu Carrito</h3>
           <span id="cart-items-count-header" class="cart-items-count-badge">0 cursos</span>
         </div>
-        <button id="close-cart-btn" class="btn-close-cart" aria-label="Cerrar carrito">
+        <button id="close-cart-btn" class="btn-close-cart" aria-label="Cerrar carrito" onclick="window.NovaLearn && window.NovaLearn.closeCart()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -482,8 +482,8 @@
   <!-- Contenedor de Toasts Flotantes -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-  <!-- Scripts -->
-  <script src="js/courses-data.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Scripts con cache busting -->
+  <script src="js/courses-data.js?v=2.2.0"></script>
+  <script src="js/app.js?v=2.2.0"></script>
 </body>
 </html>

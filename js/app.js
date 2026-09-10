@@ -1,48 +1,68 @@
 // ==========================================================================
 // NovaLearn - Plataforma Moderna de Cursos Online
-// Lógica de Carrito, Búsqueda, Filtros y Persistencia
+// Lógica de Carrito, Búsqueda, Filtros, Persistencia y Temas
+// Versión 2.2.0 (Failsafe & Cache-Busted)
 // ==========================================================================
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Estado de la Aplicación
-  let cart = JSON.parse(localStorage.getItem("novalearn_cart")) || [];
-  let appliedDiscount = 0; // Porcentaje de descuento (0 a 1)
+(function() {
+  'use strict';
+
+  // Variables de Estado
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem("novalearn_cart")) || [];
+    if (!Array.isArray(cart)) cart = [];
+  } catch (e) {
+    cart = [];
+  }
+
+  let appliedDiscount = 0;
   let activeCoupon = "";
   let currentCategory = "todos";
   let searchQuery = "";
 
-  // Elementos del DOM
-  const coursesContainer = document.getElementById("courses-grid");
-  const cartBackdrop = document.getElementById("cart-backdrop");
-  const cartDrawer = document.getElementById("cart-drawer");
-  const openCartBtn = document.getElementById("open-cart-btn");
-  const closeCartBtn = document.getElementById("close-cart-btn");
-  const cartItemsContainer = document.getElementById("cart-items");
-  const cartEmptyView = document.getElementById("cart-empty");
-  const cartFooter = document.getElementById("cart-footer");
-  const cartBadge = document.getElementById("cart-badge");
-  const cartItemsCountHeader = document.getElementById("cart-items-count-header");
-  const subtotalEl = document.getElementById("cart-subtotal");
-  const discountRow = document.getElementById("discount-row");
-  const discountAmountEl = document.getElementById("discount-amount");
-  const totalAmountEl = document.getElementById("cart-total");
-  const clearCartBtn = document.getElementById("clear-cart-btn");
-  const checkoutBtn = document.getElementById("checkout-btn");
-  const couponInput = document.getElementById("coupon-input");
-  const applyCouponBtn = document.getElementById("apply-coupon-btn");
-  const searchInput = document.getElementById("buscador");
-  const searchForm = document.getElementById("busqueda");
-  const filterPills = document.querySelectorAll(".filter-btn");
-  const themeToggleBtn = document.getElementById("theme-toggle-btn");
-  const toastContainer = document.getElementById("toast-container");
-  const quickViewModal = document.getElementById("quick-view-modal");
-  const checkoutModal = document.getElementById("checkout-modal");
+  // Referencias a elementos
+  let coursesContainer, cartBackdrop, cartDrawer, openCartBtn, closeCartBtn;
+  let cartItemsContainer, cartEmptyView, cartFooter, cartBadge, cartItemsCountHeader;
+  let subtotalEl, discountRow, discountAmountEl, totalAmountEl, clearCartBtn, checkoutBtn;
+  let couponInput, applyCouponBtn, searchInput, searchForm, filterPills, themeToggleBtn;
+  let toastContainer, quickViewModal, checkoutModal;
 
-  // Iniciar la plataforma
-  initTheme();
-  renderCourses();
-  updateCartUI();
-  setupEventListeners();
+  // Inicialización principal
+  function initApp() {
+    console.log("Iniciando NovaLearn App v2.2.0...");
+
+    coursesContainer = document.getElementById("courses-grid");
+    cartBackdrop = document.getElementById("cart-backdrop");
+    cartDrawer = document.getElementById("cart-drawer");
+    openCartBtn = document.getElementById("open-cart-btn");
+    closeCartBtn = document.getElementById("close-cart-btn");
+    cartItemsContainer = document.getElementById("cart-items");
+    cartEmptyView = document.getElementById("cart-empty");
+    cartFooter = document.getElementById("cart-footer");
+    cartBadge = document.getElementById("cart-badge");
+    cartItemsCountHeader = document.getElementById("cart-items-count-header");
+    subtotalEl = document.getElementById("cart-subtotal");
+    discountRow = document.getElementById("discount-row");
+    discountAmountEl = document.getElementById("discount-amount");
+    totalAmountEl = document.getElementById("cart-total");
+    clearCartBtn = document.getElementById("clear-cart-btn");
+    checkoutBtn = document.getElementById("checkout-btn");
+    couponInput = document.getElementById("coupon-input");
+    applyCouponBtn = document.getElementById("apply-coupon-btn");
+    searchInput = document.getElementById("buscador");
+    searchForm = document.getElementById("busqueda");
+    filterPills = document.querySelectorAll(".filter-btn");
+    themeToggleBtn = document.getElementById("theme-toggle-btn");
+    toastContainer = document.getElementById("toast-container");
+    quickViewModal = document.getElementById("quick-view-modal");
+    checkoutModal = document.getElementById("checkout-modal");
+
+    initTheme();
+    renderCourses();
+    updateCartUI();
+    setupEventListeners();
+  }
 
   // ==========================================================================
   // Renderizado del Catálogo de Cursos
@@ -50,22 +70,31 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderCourses() {
     if (!coursesContainer) return;
 
-    // Filtrado por categoría y búsqueda
-    const filteredCourses = COURSES_DATA.filter(course => {
+    const data = (typeof COURSES_DATA !== "undefined" && Array.isArray(COURSES_DATA)) 
+      ? COURSES_DATA 
+      : [];
+
+    if (data.length === 0) {
+      coursesContainer.innerHTML = `<p style="text-align: center; grid-column: 1/-1;">Cargando catálogo de cursos...</p>`;
+      return;
+    }
+
+    const filtered = data.filter(course => {
       const matchCategory = currentCategory === "todos" || course.categoria === currentCategory;
-      const matchSearch = searchQuery === "" || 
-        course.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.instructor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.descripcion.toLowerCase().includes(searchQuery.toLowerCase());
+      const query = searchQuery.toLowerCase().trim();
+      const matchSearch = !query || 
+        (course.titulo && course.titulo.toLowerCase().includes(query)) ||
+        (course.instructor && course.instructor.toLowerCase().includes(query)) ||
+        (course.descripcion && course.descripcion.toLowerCase().includes(query));
       return matchCategory && matchSearch;
     });
 
-    if (filteredCourses.length === 0) {
+    if (filtered.length === 0) {
       coursesContainer.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-secondary);">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-          <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 0.5rem;">No encontramos cursos que coincidan</h3>
-          <p>Prueba buscando con otros términos o seleccionando otra categoría.</p>
+          <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 0.5rem;">No se encontraron resultados para "${escapeHTML(searchQuery)}"</h3>
+          <p>Prueba buscando con otros términos o selecciona otra categoría.</p>
           <button id="reset-filters-btn" class="filter-btn active" style="margin-top: 1.5rem; display: inline-block;">Ver todos los cursos</button>
         </div>
       `;
@@ -82,34 +111,34 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    coursesContainer.innerHTML = filteredCourses.map(course => {
-      const isBestseller = course.badge.toLowerCase().includes("bestseller");
-      const isTop = course.badge.toLowerCase().includes("top");
+    coursesContainer.innerHTML = filtered.map(course => {
+      const isBestseller = course.badge && course.badge.toLowerCase().includes("bestseller");
+      const isTop = course.badge && course.badge.toLowerCase().includes("top");
       const badgeClass = isBestseller ? "bestseller" : (isTop ? "top-ventas" : "");
 
       return `
         <article class="course-card" data-id="${course.id}">
           <div class="card-media">
-            <img src="${course.imagen}" alt="${course.titulo}" loading="lazy">
-            <span class="badge-tag ${badgeClass}">${course.badge}</span>
+            <img src="${course.imagen}" alt="${escapeHTML(course.titulo)}" loading="lazy">
+            <span class="badge-tag ${badgeClass}">${course.badge || 'Curso'}</span>
             <button class="card-quick-view" data-quick-id="${course.id}">Vista rápida</button>
           </div>
           <div class="card-body">
             <div class="card-category">${getCategoryName(course.categoria)}</div>
-            <h3 class="card-title" title="${course.titulo}">${course.titulo}</h3>
+            <h3 class="card-title" title="${escapeHTML(course.titulo)}">${escapeHTML(course.titulo)}</h3>
             <div class="card-instructor">
-              <img src="${course.avatar}" alt="${course.instructor}" class="instructor-avatar">
-              <span class="instructor-name">${course.instructor}</span>
+              <img src="${course.avatar}" alt="${escapeHTML(course.instructor)}" class="instructor-avatar">
+              <span class="instructor-name">${escapeHTML(course.instructor)}</span>
             </div>
             <div class="card-meta">
               <div class="rating-box">
-                <span>${course.rating.toFixed(1)}</span>
+                <span>${(course.rating || 4.8).toFixed(1)}</span>
                 <div class="rating-stars">
-                  ${getStarsSVG(course.rating)}
+                  ${getStarsSVG(course.rating || 5)}
                 </div>
-                <span class="reviews-count">(${course.reviews})</span>
+                <span class="reviews-count">(${course.reviews || 1200})</span>
               </div>
-              <span class="course-duration">${course.duracion}</span>
+              <span class="course-duration">${course.duracion || '30 horas'}</span>
             </div>
             <div class="card-footer">
               <div class="pricing">
@@ -134,12 +163,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function getCategoryName(cat) {
     const map = {
       desarrollo: "Desarrollo & IA",
-      diseno: "Diseño & Creatividad",
+      diseno: "Diseño & UX",
       musica: "Música & Audio",
       negocios: "Negocios & Finanzas",
       "estilo-vida": "Estilo de Vida & Salud"
     };
-    return map[cat] || cat;
+    return map[cat] || cat || "General";
   }
 
   function getStarsSVG(rating) {
@@ -154,21 +183,31 @@ document.addEventListener("DOMContentLoaded", () => {
     return stars;
   }
 
+  function escapeHTML(str) {
+    if (!str) return "";
+    return str.replace(/[&<>'"]/g, tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag));
+  }
+
   // ==========================================================================
-  // Operaciones del Carrito de Compras
+  // Operaciones del Carrito
   // ==========================================================================
   function addToCart(courseId) {
-    const course = COURSES_DATA.find(c => c.id === courseId);
+    const data = (typeof COURSES_DATA !== "undefined" && Array.isArray(COURSES_DATA)) ? COURSES_DATA : [];
+    const course = data.find(c => c.id === courseId);
     if (!course) return;
 
     const existingIndex = cart.findIndex(item => item.id === courseId);
 
     if (existingIndex > -1) {
-      // Incrementar cantidad si ya existe
       cart[existingIndex].cantidad += 1;
-      showToast("Cantidad aumentada", `Ahora tienes ${cart[existingIndex].cantidad} accesos de "${course.titulo}"`, "info");
+      showToast("Cantidad aumentada", `Tienes ${cart[existingIndex].cantidad} unidades de "${course.titulo}"`, "info");
     } else {
-      // Añadir nuevo curso con cantidad 1
       cart.push({
         id: course.id,
         titulo: course.titulo,
@@ -192,7 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cart[itemIndex].cantidad += delta;
 
     if (cart[itemIndex].cantidad <= 0) {
-      // Si la cantidad llega a 0, se elimina
       const removedTitle = cart[itemIndex].titulo;
       cart.splice(itemIndex, 1);
       showToast("Curso removido", `"${removedTitle}" eliminado del carrito`, "warning");
@@ -226,14 +264,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function saveCart() {
-    localStorage.setItem("novalearn_cart", JSON.stringify(cart));
+    try {
+      localStorage.setItem("novalearn_cart", JSON.stringify(cart));
+    } catch (e) {
+      console.error("Error guardando carrito:", e);
+    }
   }
 
   function updateCartUI() {
-    // 1. Total de ítems (suma de todas las cantidades)
     const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0);
 
-    // 2. Actualizar badges en Header
     if (cartBadge) {
       cartBadge.textContent = totalItems;
       cartBadge.style.display = totalItems > 0 ? "flex" : "none";
@@ -243,7 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
       cartItemsCountHeader.textContent = `${totalItems} ${totalItems === 1 ? 'curso' : 'cursos'}`;
     }
 
-    // 3. Vista vacía vs vista con cursos
     if (cart.length === 0) {
       if (cartEmptyView) cartEmptyView.style.display = "flex";
       if (cartItemsContainer) cartItemsContainer.style.display = "none";
@@ -255,35 +294,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cartItemsContainer) cartItemsContainer.style.display = "flex";
     if (cartFooter) cartFooter.style.display = "flex";
 
-    // 4. Renderizar ítems del carrito
-    cartItemsContainer.innerHTML = cart.map(item => {
-      const itemSubtotal = (item.precio * item.cantidad).toFixed(2);
-      return `
-        <div class="cart-item" data-cart-id="${item.id}">
-          <img src="${item.imagen}" alt="${item.titulo}" class="cart-item-img">
-          <div class="cart-item-info">
-            <h4 class="cart-item-title" title="${item.titulo}">${item.titulo}</h4>
-            <div class="cart-item-price">$${item.precio} c/u</div>
-            <div class="cart-item-bottom">
-              <div class="quantity-control">
-                <button class="qty-btn btn-qty-minus" data-id="${item.id}" title="Disminuir cantidad">−</button>
-                <span class="qty-display">${item.cantidad}</span>
-                <button class="qty-btn btn-qty-plus" data-id="${item.id}" title="Aumentar cantidad">+</button>
+    if (cartItemsContainer) {
+      cartItemsContainer.innerHTML = cart.map(item => {
+        const itemSubtotal = (item.precio * item.cantidad).toFixed(2);
+        return `
+          <div class="cart-item" data-cart-id="${item.id}">
+            <img src="${item.imagen}" alt="${escapeHTML(item.titulo)}" class="cart-item-img">
+            <div class="cart-item-info">
+              <h4 class="cart-item-title" title="${escapeHTML(item.titulo)}">${escapeHTML(item.titulo)}</h4>
+              <div class="cart-item-price">$${item.precio} c/u</div>
+              <div class="cart-item-bottom">
+                <div class="quantity-control">
+                  <button class="qty-btn btn-qty-minus" data-id="${item.id}" title="Disminuir">−</button>
+                  <span class="qty-display">${item.cantidad}</span>
+                  <button class="qty-btn btn-qty-plus" data-id="${item.id}" title="Aumentar">+</button>
+                </div>
+                <span class="cart-item-subtotal">$${itemSubtotal}</span>
               </div>
-              <span class="cart-item-subtotal">$${itemSubtotal}</span>
             </div>
+            <button class="btn-remove-item" data-id="${item.id}" title="Eliminar curso">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
           </div>
-          <button class="btn-remove-item" data-id="${item.id}" title="Eliminar curso">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-      `;
-    }).join("");
+        `;
+      }).join("");
+    }
 
-    // 5. Cálculos de subtotales y totales
     const subtotal = cart.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
     const discountAmount = subtotal * appliedDiscount;
     const finalTotal = subtotal - discountAmount;
@@ -329,10 +368,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================================================
-  // Ventanas Modales & Toasts
+  // Modales y Toasts
   // ==========================================================================
   function openQuickView(courseId) {
-    const course = COURSES_DATA.find(c => c.id === courseId);
+    const data = (typeof COURSES_DATA !== "undefined" && Array.isArray(COURSES_DATA)) ? COURSES_DATA : [];
+    const course = data.find(c => c.id === courseId);
     if (!course || !quickViewModal) return;
 
     const modalBody = quickViewModal.querySelector(".modal-body-content");
@@ -341,18 +381,18 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBody.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 1.5rem;">
         <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 16/9;">
-          <img src="${course.imagen}" alt="${course.titulo}" style="width: 100%; height: 100%; object-fit: cover;">
-          <span class="badge-tag bestseller" style="position: absolute; top: 12px; left: 12px;">${course.badge}</span>
+          <img src="${course.imagen}" alt="${escapeHTML(course.titulo)}" style="width: 100%; height: 100%; object-fit: cover;">
+          <span class="badge-tag bestseller" style="position: absolute; top: 12px; left: 12px;">${course.badge || 'Destacado'}</span>
         </div>
         <div>
           <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: 700;">${getCategoryName(course.categoria)}</span>
-          <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0.4rem 0 0.8rem;">${course.titulo}</h2>
-          <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">${course.descripcion}</p>
+          <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0.4rem 0 0.8rem;">${escapeHTML(course.titulo)}</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">${escapeHTML(course.descripcion)}</p>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; background: var(--bg-surface-elevated); border-radius: var(--radius-md);">
           <div>
             <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Instructor</span>
-            <strong style="font-size: 0.95rem;">${course.instructor}</strong>
+            <strong style="font-size: 0.95rem;">${escapeHTML(course.instructor)}</strong>
           </div>
           <div>
             <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Duración</span>
@@ -364,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <div>
             <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Estudiantes</span>
-            <strong style="font-size: 0.95rem;">${course.estudiantes.toLocaleString()} inscritos</strong>
+            <strong style="font-size: 0.95rem;">${(course.estudiantes || 1000).toLocaleString()} inscritos</strong>
           </div>
         </div>
         <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
@@ -425,12 +465,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     checkoutModal.classList.add("open");
-    // cerrar drawer si estaba abierto
     closeCart();
   }
 
   function completeOrder(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const btn = document.getElementById("confirm-payment-btn");
     if (btn) {
       btn.textContent = "Procesando pago seguro...";
@@ -438,12 +477,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setTimeout(() => {
-      if (btn) {
-        btn.textContent = "¡Pago Exitoso!";
-      }
+      if (btn) btn.textContent = "¡Pago Exitoso!";
       showToast("¡Compra Exitosa!", "Tus credenciales de acceso fueron enviadas a tu correo", "success");
       
-      // Limpiar carrito
       cart = [];
       appliedDiscount = 0;
       activeCoupon = "";
@@ -453,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         if (checkoutModal) checkoutModal.classList.remove("open");
         if (btn) {
-          btn.textContent = "Pagar Ahora";
+          btn.textContent = "Confirmar y Pagar Ahora";
           btn.disabled = false;
         }
       }, 1500);
@@ -475,8 +511,8 @@ document.addEventListener("DOMContentLoaded", () => {
     toast.innerHTML = `
       <span class="toast-icon">${iconMap[type] || '🔔'}</span>
       <div class="toast-content">
-        <h5>${title}</h5>
-        <p>${message}</p>
+        <h5>${escapeHTML(title)}</h5>
+        <p>${escapeHTML(message)}</p>
       </div>
     `;
 
@@ -510,7 +546,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("novalearn_theme", newTheme);
+    try {
+      localStorage.setItem("novalearn_theme", newTheme);
+    } catch(e) {}
     updateThemeIcon(newTheme);
     showToast("Tema actualizado", `Modo ${newTheme === 'dark' ? 'Oscuro' : 'Claro'} activado`, "info");
   }
@@ -558,22 +596,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Toggle de tema
     if (themeToggleBtn) themeToggleBtn.addEventListener("click", toggleTheme);
 
-    // Event delegation para el catálogo de cursos
+    // Event delegation para catálogo de cursos
     if (coursesContainer) {
       coursesContainer.addEventListener("click", (e) => {
         const addBtn = e.target.closest(".btn-add-cart");
         if (addBtn) {
           e.preventDefault();
-          const courseId = addBtn.dataset.id;
-          addToCart(courseId);
+          addToCart(addBtn.dataset.id);
           return;
         }
 
         const quickBtn = e.target.closest(".card-quick-view");
         if (quickBtn) {
           e.preventDefault();
-          const courseId = quickBtn.dataset.quickId;
-          openQuickView(courseId);
+          openQuickView(quickBtn.dataset.quickId);
           return;
         }
       });
@@ -582,36 +618,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // Event delegation para el Carrito (incrementar, decrementar, eliminar)
     if (cartItemsContainer) {
       cartItemsContainer.addEventListener("click", (e) => {
-        // Incrementar
         const plusBtn = e.target.closest(".btn-qty-plus");
         if (plusBtn) {
-          const id = plusBtn.dataset.id;
-          updateItemQuantity(id, 1);
+          updateItemQuantity(plusBtn.dataset.id, 1);
           return;
         }
 
-        // Decrementar
         const minusBtn = e.target.closest(".btn-qty-minus");
         if (minusBtn) {
-          const id = minusBtn.dataset.id;
-          updateItemQuantity(id, -1);
+          updateItemQuantity(minusBtn.dataset.id, -1);
           return;
         }
 
-        // Eliminar
         const removeBtn = e.target.closest(".btn-remove-item");
         if (removeBtn) {
-          const id = removeBtn.dataset.id;
-          removeFromCart(id);
+          removeFromCart(removeBtn.dataset.id);
           return;
         }
       });
     }
 
-    // Vaciar carrito
+    // Botones del carrito
     if (clearCartBtn) clearCartBtn.addEventListener("click", clearCart);
-
-    // Finalizar compra -> abrir checkout modal
     if (checkoutBtn) checkoutBtn.addEventListener("click", openCheckoutModal);
 
     // Formulario de pago simulado
@@ -629,21 +657,25 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Búsqueda en tiempo real
+    // Búsqueda en tiempo real (input + keyup)
+    function handleSearch(val) {
+      searchQuery = val.trim();
+      renderCourses();
+    }
+
     if (searchInput) {
-      searchInput.addEventListener("input", (e) => {
-        searchQuery = e.target.value.trim();
-        renderCourses();
-      });
+      searchInput.addEventListener("input", (e) => handleSearch(e.target.value));
+      searchInput.addEventListener("keyup", (e) => handleSearch(e.target.value));
     }
 
     if (searchForm) {
       searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        searchQuery = searchInput.value.trim();
-        renderCourses();
+        if (searchInput) handleSearch(searchInput.value);
         const catalogSection = document.getElementById("catalogo");
-        if (catalogSection) catalogSection.scrollIntoView({ behavior: "smooth" });
+        if (catalogSection) {
+          catalogSection.scrollIntoView({ behavior: "smooth" });
+        }
       });
     }
 
@@ -654,6 +686,10 @@ document.addEventListener("DOMContentLoaded", () => {
         pill.classList.add("active");
         currentCategory = pill.dataset.category;
         renderCourses();
+        const catalogSection = document.getElementById("catalogo");
+        if (catalogSection) {
+          catalogSection.scrollIntoView({ behavior: "smooth" });
+        }
       });
     });
 
@@ -671,8 +707,7 @@ document.addEventListener("DOMContentLoaded", () => {
       quickViewModal.addEventListener("click", (e) => {
         const addBtn = e.target.closest(".modal-add-btn");
         if (addBtn) {
-          const id = addBtn.dataset.id;
-          addToCart(id);
+          addToCart(addBtn.dataset.id);
           quickViewModal.classList.remove("open");
         }
       });
@@ -687,4 +722,38 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-});
+
+  function filterByCategory(category, btnElement) {
+    currentCategory = category || "todos";
+    if (filterPills && filterPills.length > 0) {
+      filterPills.forEach(p => p.classList.remove("active"));
+    }
+    if (btnElement) {
+      btnElement.classList.add("active");
+    }
+    renderCourses();
+    const catalogSection = document.getElementById("catalogo");
+    if (catalogSection) {
+      catalogSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  // Exponer métodos globales para acceso directo / fallbacks en línea
+  window.NovaLearn = {
+    toggleTheme,
+    openCart,
+    closeCart,
+    addToCart,
+    clearCart,
+    applyCoupon,
+    renderCourses,
+    filterByCategory
+  };
+
+  // Autoejecución inmediata si el DOM ya está listo (evita que se congele si DOMContentLoaded ya ocurrió)
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initApp);
+  } else {
+    initApp();
+  }
+})();
