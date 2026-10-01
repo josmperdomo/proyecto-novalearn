@@ -92,7 +92,12 @@
     if (filtered.length === 0) {
       coursesContainer.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-secondary);">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+          <div style="width: 64px; height: 64px; margin: 0 auto 1.25rem; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-subtle);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
           <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 0.5rem;">No se encontraron resultados para "${escapeHTML(searchQuery)}"</h3>
           <p>Prueba buscando con otros términos o selecciona otra categoría.</p>
           <button id="reset-filters-btn" class="filter-btn active" style="margin-top: 1.5rem; display: inline-block;">Ver todos los cursos</button>
@@ -400,7 +405,10 @@
           </div>
           <div>
             <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Calificación</span>
-            <strong style="font-size: 0.95rem; color: var(--accent-amber);">★ ${course.rating} (${course.reviews} reseñas)</strong>
+            <strong style="font-size: 0.95rem; color: var(--secondary); display: inline-flex; align-items: center; gap: 4px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              ${course.rating} (${course.reviews} reseñas)
+            </strong>
           </div>
           <div>
             <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Estudiantes</span>
@@ -503,13 +511,13 @@
     toast.className = `toast ${type}`;
 
     const iconMap = {
-      success: "✨",
-      info: "💡",
-      warning: "⚠️"
+      success: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--accent-emerald); flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/></svg>`,
+      info: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary); flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
+      warning: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--secondary); flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`
     };
 
     toast.innerHTML = `
-      <span class="toast-icon">${iconMap[type] || '🔔'}</span>
+      <span class="toast-icon">${iconMap[type] || iconMap.info}</span>
       <div class="toast-content">
         <h5>${escapeHTML(title)}</h5>
         <p>${escapeHTML(message)}</p>
@@ -539,7 +547,7 @@
   let isTogglingTheme = false;
 
   function initTheme() {
-    const savedTheme = localStorage.getItem("novalearn_theme") || "dark";
+    const savedTheme = localStorage.getItem("novalearn_theme") || "light";
     document.documentElement.setAttribute("data-theme", savedTheme);
     if (document.body) {
       document.body.classList.toggle("light-theme", savedTheme === "light");
